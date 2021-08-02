@@ -12,25 +12,15 @@ if (env.HTTPS) {
 }
 // --- prepare server ---
 const http = require("http");
-const https = require("https");
 const express = require('express');
 
 const app = express();
 app.use(express.static('public'));
 
-let webServer = null;
-if (env.HTTPS) {
-    // -- https ---
-    webServer = https.createServer(sslOptions, app).listen(env.PORT, function () {
-        console.log('Web server start. https://' + env.HOST_NAME + ':' + webServer.address().port + '/');
-    });
-}
-else {
-    // --- http ---
-    webServer = http.Server(app).listen(env.PORT, function () {
-        console.log('Web server start. http://' + env.HOST_NAME + ':' + webServer.address().port + '/');
-    });
-}
+let webServer = http.Server(app).listen(env.PORT, function () {
+    console.log('Web server start. http://' + env.HOST_NAME + ':' + webServer.address().port + '/');
+});
+
 // ========= room ===========
 global.Room = require('./services/room').Room
 // ========= mediasoup ===========
@@ -204,6 +194,7 @@ const helpers_mediasoup = require("./helpers/helper_mediasoup");
             });
             helpers.sendResponse(params, callback);
         });
+
         socket.on('connectConsumerTransport', async (data, callback) => {
             const room = Room.getRoom(data.roomName);
             console.log(room)
@@ -216,6 +207,7 @@ const helpers_mediasoup = require("./helpers/helper_mediasoup");
             await transport.connect({ dtlsParameters: data.dtlsParameters });
             helpers.sendResponse({}, callback);
         });
+
         socket.on('consume', async (data, callback) => {
             const kind = data.kind;
             const room = Room.getRoom(data.roomName);
@@ -259,6 +251,7 @@ const helpers_mediasoup = require("./helpers/helper_mediasoup");
                 helpers.sendResponse(params, callback);
             }
         });
+
         socket.on('resume', async (data, callback) => {
             const room = Room.getRoom(data.roomName);
             const kind = data.kind;
@@ -277,6 +270,7 @@ const helpers_mediasoup = require("./helpers/helper_mediasoup");
                 console.warn('NO resume for audio');
             }
         });
+        
         function setRoomname(room) {
             socket.roomname = room;
         }
