@@ -11,7 +11,6 @@ if (roomName === null || typeof (roomName) === "undefined" || roomName === "") {
     throw new Error("Please enter room name exmalple: ?room=mrtri on url");
 }
 
-
 // =========== socket.io ========== 
 let socket = null;
 // return Promise
@@ -78,6 +77,7 @@ async function startMedia() {
 
     return await navigator.mediaDevices.getUserMedia({ audio: useAudio, video: useVideo })
 }
+
 function stopMedia() {
     if (localStream) {
         pauseVideo(localVideo);
@@ -166,6 +166,7 @@ async function publish() {
 
 
 }
+
 function disconnect() {
     if (localStream) {
         pauseVideo(localVideo);

@@ -1,24 +1,12 @@
-const fs = require('fs');
-const dotenv = require('dotenv');
-const dotenvParseVariables = require('dotenv-parse-variables');
-let env = dotenv.config({})
-if (env.error) throw env.error;
-env = dotenvParseVariables(env.parsed);
-// --- set ssl server ---
-let sslOptions = {};
-if (env.HTTPS) {
-    sslOptions.key = fs.readFileSync(env.HTTPS_KEY_FILE).toString();
-    sslOptions.cert = fs.readFileSync(env.HTTPS_CERT_FILE).toString();
-}
 // --- prepare server ---
 const http = require("http");
 const express = require('express');
-
+const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.static('public'));
 
-let webServer = http.Server(app).listen(env.PORT, function () {
-    console.log('Web server start. http://' + env.HOST_NAME + ':' + webServer.address().port + '/');
+let webServer = http.Server(app).listen(port, function () {
+    console.log(`Web server start. port=${port}`);
 });
 
 // ========= room ===========
